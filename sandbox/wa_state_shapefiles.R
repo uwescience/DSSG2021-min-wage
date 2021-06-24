@@ -24,9 +24,9 @@ names(census_tract_10_sf)
 glimpse(census_tract_10_sf)
 
 # subset to what we want
-# King = 003
-# Pierce = 061
-# Snohomish = 053
+# King = 033
+# Pierce = 053
+# Snohomish = 061
 project_county_fp <- c("033", "061", "053")
 
 # only get tracts we need for the project
@@ -35,4 +35,7 @@ sub_tracts <- census_tract_10_sf %>%
 
 # visualize tracts
 ggplot() +
-  geom_sf(data = sub_tracts)
+  geom_sf(data = sub_tracts, aes(fill=POP10))
+
+
+
