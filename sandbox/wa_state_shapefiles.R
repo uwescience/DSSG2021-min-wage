@@ -34,8 +34,16 @@ sub_tracts <- census_tract_10_sf %>%
   filter(COUNTYFP10 %in% project_county_fp)
 
 # visualize tracts
-ggplot() +
-  geom_sf(data = sub_tracts, aes(fill=POP10))
+sub_tracts %>%
+  mutate(black_pct = POPBLACK/POP10,
+         white_pct = POPWHITE/POP10,
+         latinx = POPHISP/POP10) %>%
+  select(black_pct,white_pct,latinx, geometry) %>%
+  gather(., race, value, black_pct:latinx) %>%
+  ggplot(.) +
+  geom_sf(aes(fill = value)) +
+  scale_fill_distiller(palette = "Spectral") +
+  facet_grid(~ race)
 
 
 
