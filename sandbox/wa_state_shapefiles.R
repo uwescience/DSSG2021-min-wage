@@ -24,9 +24,9 @@ names(census_tract_10_sf)
 glimpse(census_tract_10_sf)
 
 # subset to what we want
-# King = 003
-# Pierce = 061
-# Snohomish = 053
+# King = 033
+# Pierce = 053
+# Snohomish = 061
 project_county_fp <- c("033", "061", "053")
 
 # only get tracts we need for the project
@@ -44,5 +44,6 @@ sub_tracts %>%
   geom_sf(aes(fill = value)) +
   scale_fill_distiller(palette = "Spectral") +
   facet_grid(~ race)
+
 
 
