@@ -1,6 +1,6 @@
 # Using Graphhopper with an R wrapper.
 
-Graphhoper is a routing tool, which we can use to calculate travel times for free.
+[Graphhopper](https://www.graphhopper.com/) is a routing tool, which we can use to calculate travel times for free.
 Steps:
 1. Follow the instructions from [quickstart-from-source](https://github.com/graphhopper/graphhopper/blob/master/docs/core/quickstart-from-source.md) guide.
 ```
@@ -17,4 +17,4 @@ git checkout master # if you prefer a less moving branch you can use e.g. 3.x
 ```
 ./graphhopper.sh -a web -i washington-latest.osm.pbf
 ```
-4. Now you can run the R script [`run_graphhopper.R`](https://github.com/uwescience/DSSG2021-min-wage/blob/main/sandbox/time_distance_calculation/run_graphhopper.R)
+4. Now you can run the R script [`run_graphhopper.R`](https://github.com/uwescience/DSSG2021-min-wage/blob/main/sandbox/time_distance_calculation/run_graphhopper.R) which is using the R [grapphopper](https://cran.r-project.org/web/packages/graphhopper/index.html) package to call the api. 
