@@ -1,6 +1,7 @@
-# Using Graphhopper with an R wrapper.
+# Using Graphhopper with an R wrapper
 
 [Graphhopper](https://www.graphhopper.com/) is a routing tool, which we can use to calculate travel times for free.
+
 Steps:
 1. Follow the instructions from [quickstart-from-source](https://github.com/graphhopper/graphhopper/blob/master/docs/core/quickstart-from-source.md) guide.
 ```
