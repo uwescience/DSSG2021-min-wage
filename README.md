@@ -5,10 +5,10 @@ Repo for code that can run outside the enclave, such as distance calculations, m
 ### Contribution Workflow:
 We recommend using a `feature-branch` workflow: each user works on their own **local** `feature-branch`, pushes final changes to a **remote** `feature-brnach`. From the remote branch they can submit a **pull request** to the main branch on GitHub.
 
-![](https://github.com/uwescience/DSSG2021-min-wage/blob/main/feature-workflow-external.png)
+![](https://github.com/uwescience/DSSG2021-min-wage/blob/main/img/feature-workflow-external.png)
 
 
-For more detailed description of the workflow check out the [Atlassian tutorial](https://www.atlassian.com/git/tutorials/comparing-workflows/img/feature-branch-workflow).
+For more detailed description of the workflow check out the [Atlassian tutorial](https://www.atlassian.com/git/tutorials/comparing-workflows/feature-branch-workflow).
 
 Once you have your branch set up the main steps should be:
 
