@@ -16,7 +16,7 @@ Once you have your branch set up the main steps should be:
 git add filename
 git commit -m "adding filename"
 git add filename
-git commut -m "updateing the filename"
+git commit -m "updating the filename"
 git pull origin main
 git push origin feature-branch
 
