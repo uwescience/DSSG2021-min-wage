@@ -5,3 +5,4 @@ Repo for code that can run outside the enclave, such as distance calculations, m
 ### Contribution Workflow:
 We recommend using a `feature branch` workflow: each user works on their own **local** `feature branch`, pushes final changes to a **remote** `feature brnach`. From the remote branch they can submit a **pull request** to the main branch on GitHub.
 
+![](https://github.com/uwescience/DSSG2021-min-wage/blob/main/feature-workflow-external.png)
