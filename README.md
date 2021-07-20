@@ -25,3 +25,7 @@ git push origin feature-branch
 Navigate to the GitHub interface and submit a Pull Request:
 
 ![](https://github.com/uwescience/DSSG2021-min-wage/blob/main/img/Compare_PullRequest.png)
+
+or if you do not see the pop-up navigate to the branch and click on the Contribute button:
+
+![](https://github.com/uwescience/DSSG2021-min-wage/blob/main/img/ContributeButton.png)
