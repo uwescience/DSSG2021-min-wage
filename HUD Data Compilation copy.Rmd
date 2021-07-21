@@ -1,0 +1,127 @@
+---
+title: "Compiled HUD SFMR for Washington State"
+author: "Lamar Foster and Delaney Glass"
+date: "7/21/2021"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r}
+library(rio)
+library(dplyr)
+library(janitor)
+library(tidyr)
+library(stringr)
+```
+
+## Read in the data 
+
+```{r}
+
+# read in data from HUD Small Area Fair Market Rents which can be found here: https://www.huduser.gov/portal/datasets/fmr/smallarea/index.html#2014
+
+hud10_11 <- import(file = "https://www.huduser.gov/portal/datasets/fmr/fmr2011f/fy2011_equiv_zc_rents_acs.xls")
+hud12 <- import(file = "https://www.huduser.gov/portal/datasets/fmr/fmr2012f/small_area_fmrs_fy2012.xls")
+hud13 <- import(file = "https://www.huduser.gov/portal/datasets/fmr/fmr2013p/small_area_fmrs_fy2013.xls")
+hud14 <- import(file = "https://www.huduser.gov/portal/datasets/fmr/fmr2014f/small_area_fmrs_fy2014.xls")
+hud15 <- import(file = "https://www.huduser.gov/portal/datasets/fmr/fmr2015f/small_area_fmrs_fy2015f.xls")
+hud16 <- import(file = "https://www.huduser.gov/portal/datasets/fmr/fmr2016f/final_fy2016_hypothetical_safmrs.xlsx")
+hud17 <- import(file = "https://www.huduser.gov/portal/datasets/fmr/fmr2017/FY2017_hypothetical_safmrs.xlsx")
+```
+
+## Data from 2012-2014 have matching col names, so for now we will use clean_names for the other dataframes
+
+```{r}
+hud10_11 <- hud10_11 %>% clean_names() # use clean_names to make all names lower-case
+hud15 <- hud15 %>% clean_names()
+hud16 <- hud16 %>% clean_names()
+hud17 <- hud17 %>% clean_names()
+
+```
+
+# Combine data from 2012-2014 
+
+```{r}
+
+# create 'year' variable to make binding easier later
+
+hud12 <- hud12 %>% 
+  mutate(year = 2012)
+
+hud13 <- hud13 %>% 
+  mutate(year = 2013)
+
+hud14 <- hud14 %>% 
+  mutate(year = 2014)
+
+# combine 2012 - 2014 data and get rid of extraneous variables
+hud12_14 <- bind_rows(hud12, hud13, hud14) %>% clean_names() %>% 
+  select(-c(state, state_name, county))
+
+```
+
+## make 'year' variables for remaining df's, rename for convergence, and drop extraneous variables 
+
+```{r}
+
+hud10_11 <- hud10_11 %>% 
+  select(-c(state, county)) %>% 
+rename(
+cbsa = cbsamet) %>% 
+  mutate(year = 2011)
+```
+
+```{r}
+hud15 <- hud15 %>% 
+  select(-c(state, statename, county)) %>% 
+rename(
+cbsa = cbsamet,
+county_name = cntyname,
+zip = zipcode,
+cbsa_name = cbnsmcnm) %>% 
+  mutate(year = 2015)
+```
+
+```{r}
+hud16 <- hud16 %>% 
+  select(-c(fips_state_code, fips_county_code, statename)) %>% 
+rename(
+cbsa = metro_code,
+cbsa_name = metro_name,
+zip = zip_code) %>% 
+  mutate(year = 2016)
+```
+
+```{r}
+hud17 <- hud17 %>% 
+rename(
+cbsa = metro_code,
+cbsa_name = metro_name,
+zip = zip_code) %>% 
+  mutate(year = 2017)
+```
+
+## combine all dataframes together so that it shows all years rental prices (studio-four bedrooms) across all years
+
+```{r}
+hud_full <- plyr::rbind.fill(hud12_14, hud10_11, hud15, hud16, hud17)
+```
+
+## filter out only Washington State data 
+
+```{r}
+hud_full %>% 
+  separate(cbsa_name, into = c("city", "state"), sep = ",") %>%
+  mutate(state = str_trim(state)) %>% 
+  filter(state == "WA MSA") %>% 
+  View()
+```
+
+## Write .csv file 
+```{r}
+
+write.csv(hud_full, "~/Dropbox/UW 2020-2021/DSSG 2021/housing-wage/hud_sfmr_2010_2017.csv")
+```
