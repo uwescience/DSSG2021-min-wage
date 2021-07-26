@@ -102,6 +102,15 @@ cbsa = metro_code,
 cbsa_name = metro_name,
 zip = zip_code) %>% 
   mutate(year = 2017)
+
+```
+
+```{r}
+
+#Add county to hud_17 data frame 
+hud17 <- left_join(hud17, hud16, by = "zip") %>% 
+  select(ends_with("x"), county_name, zip) %>% 
+  rename_at(.vars = vars(ends_with(".x")), .funs = funs(sub("[.]x$", "",.)))
 ```
 
 ## combine all dataframes together so that it shows all years rental prices (studio-four bedrooms) across all years
@@ -113,15 +122,51 @@ hud_full <- plyr::rbind.fill(hud12_14, hud10_11, hud15, hud16, hud17)
 ## filter out only Washington State data 
 
 ```{r}
-hud_full %>% 
-  separate(cbsa_name, into = c("city", "state"), sep = ",") %>%
-  mutate(state = str_trim(state)) %>% 
-  filter(state == "WA MSA") %>% 
-  View()
+# Filter data for only Washington State 
+hud_WA <- hud_full %>% 
+  separate(cbsa_name, into = c("city", "region"), sep = ",") %>%
+  mutate(region = str_trim(region)) %>% 
+  filter(region == "WA MSA") %>% 
+  rename(
+    region = city,
+    state = region) %>%
+  mutate(state = "WA")
+```
+
+```{r}
+# make long format
+
+#Wrangle data to make it long
+hud_long <- hud_WA %>% 
+  rename(
+    county = county_name,
+    Studio = area_rent_br0,
+    `One Bedroom` = area_rent_br1,
+    `Two Bedrooms` = area_rent_br2,
+    `Three Bedrooms` = area_rent_br3,
+    `Four Bedrooms` = area_rent_br4) %>% 
+  pivot_longer(c(Studio, `One Bedroom`, `Two Bedrooms`, `Three Bedrooms`, `Four Bedrooms`), names_to = "Bedrooms", values_to = "Rent")
+
+```
+
+```{r}
+
+# Make region and bedroom a factor with specific levels 
+hud_long$Bedrooms <- factor(hud_long$Bedrooms, 
+                         levels = c("Studio", "One Bedroom", "Two Bedrooms", "Three Bedrooms", "Four Bedrooms"))
+hud_long$region <- factor(hud_long$region)
+hud_long$year <- as.integer(hud_long$year)
+hud_long <- hud_long %>% mutate(zip = parse_number(zip))
+hud_long[hud_long == "Kennewick-Richland" ] <-  "Kennewick-Pasco-Richland"
+hud_long[hud_long == "Olympia" ] <-  "Olympia-Tumwater"
+hud_long[hud_long == "Spokane" ] <-  "Spokane-Spokane Valley"
+hud_long[hud_long == "Wenatchee" ] <-  "Wenatchee-East Wenatchee"
+
 ```
 
 ## Write .csv file 
 ```{r}
 
-write.csv(hud_full, "~/Dropbox/UW 2020-2021/DSSG 2021/housing-wage/hud_sfmr_2010_2017.csv")
+write.csv(hud_long, "~/Dropbox/UW 2020-2021/DSSG 2021/housing-wage/hud_sfmr_final_WA.csv")
+
 ```
